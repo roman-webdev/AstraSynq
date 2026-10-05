@@ -456,5 +456,7 @@
   "demo_busy": "demo_busy",
   "demo_operation_disabled": "demo_operation_disabled",
   "synthetic_sink": "synthetic_sink",
-  "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.": "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute."
+  "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.": "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.",
+  "Synthetic demo": "Synthetic demo",
+  "Demo": "Demo"
 }
