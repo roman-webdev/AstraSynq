@@ -60,7 +60,7 @@ async def security_headers(request, call_next):
     if demo_mode():
         response.headers['X-AstraSynq-Mode']='synthetic-demo'
         if production(): response.headers['Strict-Transport-Security']='max-age=31536000'
-        if response.headers.get('content-type','').startswith('text/html'):
+        if response.headers.get('content-type','').startswith('text/html') or (request.url.path=='/' and response.status_code==304):
             response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
     if production() and request.url.scheme=='https':
         response.headers['Strict-Transport-Security']='max-age=31536000'
