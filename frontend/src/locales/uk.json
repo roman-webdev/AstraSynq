@@ -456,5 +456,7 @@
   "demo_busy": "Демо зайняте. Спробуйте ще раз.",
   "demo_operation_disabled": "Цю дію вимкнено в синтетичному демо.",
   "synthetic_sink": "Імітація доставки — без мережевого запиту",
-  "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.": "Синтетичний обліковий запис за запрошенням. Попросіть власника про тимчасовий доступ. Перше завантаження може тривати близько хвилини."
+  "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.": "Синтетичний обліковий запис за запрошенням. Попросіть власника про тимчасовий доступ. Перше завантаження може тривати близько хвилини.",
+  "Synthetic demo": "Синтетичне демо",
+  "Demo": "Демо"
 }

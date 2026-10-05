@@ -23,3 +23,12 @@ summary:focus-visible,.skip-link:focus-visible{outline:2px solid #267f70;outline
 .landing .landing-nav>.language-switcher{grid-column:4;grid-row:1;justify-self:end}
 @media(max-width:1100px){.landing .landing-nav{grid-template-columns:1fr auto 62px;padding-block:14px;row-gap:14px;height:auto;min-height:100px}.landing .landing-nav>nav{grid-column:1 / -1;grid-row:2;justify-self:center}.landing .landing-nav>.nav-cta{grid-column:2}.landing .landing-nav>.language-switcher{grid-column:3}.landing-header-spacer{height:100px}}
 @media(max-width:480px){.landing .landing-nav{grid-template-columns:1fr 62px}.landing .landing-nav>.language-switcher{grid-column:2}.landing .landing-nav>.nav-cta{grid-column:1 / -1;grid-row:2;justify-self:start}.landing .landing-nav>nav{display:none}.landing-header-spacer{height:126px}}
+
+/* Keep the disclosure alongside header actions, including the existing mobile row. */
+.landing .landing-nav{grid-template-columns:auto 1fr auto auto 62px}
+.landing .landing-nav>.demo-indicator{grid-column:3;grid-row:1}
+.landing .landing-nav>.nav-cta{grid-column:4}
+.landing .landing-nav>.language-switcher{grid-column:5}
+.demo-label-short{display:none}
+@media(max-width:1100px){.landing .landing-nav{grid-template-columns:1fr auto auto 62px}.landing .landing-nav>.demo-indicator{grid-column:2}.landing .landing-nav>.nav-cta{grid-column:3}.landing .landing-nav>.language-switcher{grid-column:4}}
+@media(max-width:480px){.landing .landing-nav{grid-template-columns:minmax(0,1fr) auto;min-height:126px;height:126px}.landing .landing-nav>.language-switcher{grid-column:2;grid-row:1}.landing .landing-nav>.nav-cta{grid-column:1;grid-row:2}.landing .landing-nav>.demo-indicator{grid-column:2;grid-row:2;justify-self:end}.demo-label-full{display:none}.demo-label-short{display:inline}}

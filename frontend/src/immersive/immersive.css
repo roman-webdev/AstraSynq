@@ -236,3 +236,11 @@ body:has(.landing),body:has(.landing) #root,.landing{width:100%;min-width:0}
  .core-mobile-explainer{display:block!important;font-size:16px;color:#c4e5ff;border-left:2px solid #7cbfff;padding-left:14px;margin-top:16px}
  .landing .landing-nav-fixed{padding-left:max(5.6%,env(safe-area-inset-left));padding-right:max(5.6%,env(safe-area-inset-right))}
 }
+
+/* Demo disclosure stays secondary and never changes the header's dimensions. */
+.demo-indicator{position:relative;flex-shrink:0}
+.landing .demo-badge{display:block;border:1px solid #ffffff26;background:#ffffff05;color:#b8c4d2;border-radius:999px;padding:7px 10px;font:500 11px/1.2 Inter,sans-serif;white-space:nowrap;cursor:pointer}
+.landing .demo-badge:hover,.landing .demo-badge[aria-expanded="true"]{background:#ffffff0c;border-color:#ffffff40}
+.demo-popover{position:absolute;right:0;top:calc(100% + 12px);width:270px;max-width:calc(100vw - 48px);padding:16px;border:1px solid #ffffff25;border-radius:12px;background:#142033;color:#c4cedb;font:400 13px/1.65 Inter,sans-serif;box-shadow:0 16px 40px #0005;z-index:2}
+@media(min-width:851px) and (max-width:1100px){.landing .landing-nav{gap:14px}.landing .landing-nav nav{gap:14px}}
+@media(max-width:480px){.landing .demo-indicator{order:4;margin-left:auto}.landing .demo-badge{font-size:10px;padding:7px 9px}.landing .landing-nav .nav-cta{margin-right:0}}

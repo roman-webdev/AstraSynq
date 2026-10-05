@@ -1,0 +1,43 @@
+import {test,before,after} from 'node:test';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import fs from 'node:fs';
+import path from 'node:path';
+const base=process.env.ASTRASYNQ_DEMO_UI_URL||'http://127.0.0.1:4191';
+const output=process.env.ASTRASYNQ_DEMO_UI_OUTPUT||path.resolve('..','.clearance','demo-ui');
+fs.mkdirSync(output,{recursive:true});
+let browser;
+before(async()=>{browser=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome',headless:true});});
+after(async()=>{await browser?.close();});
+for(const lang of ['en','uk','ru'])test(`${lang}: compact demo disclosure, stable header and language menu`,async()=>{
+ const ctx=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ await ctx.route('**/api/v1/auth/me',r=>r.fulfill({status:401,json:{detail:{code:'auth_required'}}}));
+ await ctx.addInitScript(l=>localStorage.setItem('astrasynq.language',l),lang);
+ const p=await ctx.newPage();await p.goto(base);
+ const labels={en:'Synthetic demo',uk:'Синтетичне демо',ru:'Синтетическое демо'};
+ assert.equal(await p.locator('.synthetic-banner').count(),0);
+ assert.equal(await p.locator('.demo-badge').innerText(),labels[lang]);
+ for(const width of [1440,1024,768,390]){
+  await p.setViewportSize({width,height:1000});await p.evaluate(()=>scrollTo(0,0));await p.waitForTimeout(250);
+  const header=p.locator('.landing-nav'),badge=p.locator('.demo-badge'),cta=p.locator('.nav-cta');
+  const initial=await header.boundingBox(),b=await badge.boundingBox(),c=await cta.boundingBox();
+  assert.equal(await badge.evaluate(el=>getComputedStyle(el).borderRadius),'999px');
+  assert.equal(await badge.evaluate(el=>getComputedStyle(el).backgroundColor),'rgba(255, 255, 255, 0.02)');
+  assert(initial.height <= (width<=480?127:101), `${lang} ${width}: header height ${initial.height}`);
+  assert(b.x>=0&&b.x+b.width<=width&&b.y>=initial.y&&b.y+b.height<=initial.y+initial.height);
+  assert(!(b.x<c.x+c.width&&b.x+b.width>c.x&&b.y<c.y+c.height&&b.y+b.height>c.y),'badge overlaps workspace');
+  await badge.click();assert.equal(await badge.getAttribute('aria-expanded'),'true');
+  assert.equal(await p.locator('.demo-popover').innerText(),JSON.parse(fs.readFileSync(new URL(`../src/locales/${lang}.json`,import.meta.url),'utf8'))['Synthetic demo data · sample CSV only · deliveries simulated · login by invitation']);
+  const pop=await p.locator('.demo-popover').boundingBox();assert(pop.x>=0&&pop.x+pop.width<=width);
+  assert.equal((await header.boundingBox()).height,initial.height);
+  await p.screenshot({path:path.join(output,`${lang}-${width}-popover.png`)});
+  await p.keyboard.press('Escape');assert.equal(await p.locator('.demo-popover').count(),0);
+  await p.locator('.language-trigger').click();await p.getByRole('menuitemradio',{name:'English'}).click();
+  assert.equal(await badge.getAttribute('aria-label'),labels.en);assert.equal((await header.boundingBox()).height,initial.height);
+  await p.locator('.language-trigger').click();await p.getByRole('menuitemradio',{name:{en:'English',uk:'Українська',ru:'Русский'}[lang]}).click();
+  await p.screenshot({path:path.join(output,`${lang}-${width}.png`)});
+  assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+ }
+ await p.locator('.nav-cta').click();await p.locator('.auth-card').waitFor();assert.equal(await p.locator('.synthetic-banner').count(),0);
+ await ctx.close();
+});
