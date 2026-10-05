@@ -1,8 +1,8 @@
 import {useEffect,useState} from 'react';
 import {request} from './api';
-import {t} from './i18n';
+import {t,useLanguage} from './i18n';
 export const syntheticDemo=import.meta.env.VITE_ASTRASYNQ_DEMO_MODE==='true';
-export function DemoBanner(){return syntheticDemo?<aside role="note" className="synthetic-banner">{t('Synthetic demo data · sample CSV only · deliveries simulated · login by invitation')}</aside>:null;}
+export function DemoBanner(){useLanguage();return syntheticDemo?<aside role="note" className="synthetic-banner">{t('Synthetic demo data · sample CSV only · deliveries simulated · login by invitation')}</aside>:null;}
 export function DemoAudit(){
  const [items,setItems]=useState<{id:string;action:string;timestamp:string}[]>([]);
  const [error,setError]=useState('');
