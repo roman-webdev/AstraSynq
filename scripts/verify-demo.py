@@ -10,7 +10,7 @@ env={**os.environ,'DATABASE_URL':url,'ASTRASYNQ_MODE':'test','ASTRASYNQ_DEMO_MOD
      'ASTRASYNQ_DEMO_PASSWORD':'Synthetic isolated browser password 42!'}
 # Refuse a non-demo frontend build before resetting even the isolated database.
 assets=list((ROOT/'frontend/dist/client/assets').glob('*.js'))
-if not any('synthetic-banner' in p.read_text(encoding='utf-8') for p in assets):
+if not any('demo-label-full' in p.read_text(encoding='utf-8') for p in assets):
     raise SystemExit('Build frontend with VITE_ASTRASYNQ_DEMO_MODE=true first')
 subprocess.run([sys.executable,'-c',
     "from app.database import engine,SessionLocal;from sqlalchemy import text;"
@@ -29,6 +29,7 @@ with (logs/'server.log').open('w') as log:
             except Exception: time.sleep(.2)
         else: raise RuntimeError('Demo startup timed out')
         subprocess.run(['node','scripts/demo-browser.mjs'],cwd=ROOT,env=env,check=True)
+        subprocess.run(['node','--test','tests/demo-ui.e2e.mjs'],cwd=ROOT/'frontend',env={**env,'ASTRASYNQ_DEMO_UI_URL':'http://127.0.0.1:8013'},check=True)
     finally:
         proc.terminate()
         try: proc.wait(timeout=10)

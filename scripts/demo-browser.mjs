@@ -7,8 +7,8 @@ try {
  const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
  const page=await context.newPage(); const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const base='http://127.0.0.1:8013';
- await page.goto(base);await page.locator('.synthetic-banner').waitFor();
- assert((await page.locator('.synthetic-banner').innerText()).includes('deliveries simulated'));
+ await page.goto(base);await page.locator('.demo-badge').waitFor();assert.equal(await page.locator('.synthetic-banner').count(),0);await page.locator('.demo-badge').click();
+ assert((await page.locator('.demo-popover').innerText()).includes('deliveries simulated'));
  await page.locator('.landing').waitFor();
  await page.goto(base+'/#/overview');await page.getByRole('heading',{name:'Sign in',exact:true}).waitFor();
  await page.getByLabel('Email',{exact:true}).fill('demo@example.test');
