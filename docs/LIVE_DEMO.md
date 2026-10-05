@@ -1,6 +1,22 @@
-# Live Synthetic Demo Prep (draft, not deployed)
+# Live Synthetic Demo (Release Candidate, not production-ready)
 
-Prepared 2026-10-05 for public `roman-webdev/AstraSynq`, based on commit `c8731b98b0c9773b50ed61352ed6e37fbca3bc1f`. RC tag `v0.5.0-rc.1` is immutable. Demo preparation must be a new commit on main after review. No public URL, deployment, new tag, production assurance or portfolio update is implied.
+**[Live synthetic demo](https://astrasynq-synthetic-demo.onrender.com)** — verified 2026-10-05.
+
+Render service `astrasynq-synthetic-demo`: Free Docker, Frankfurt, main; deployed commit `41c7f161bb6570b608acafd0cf4ae83a4841bdaa`. Neon project `astrasynq-synthetic-demo`: Free, AWS Frankfurt, database `astrasynq_demo`, 0.25 CU, scale-to-zero after five minutes. No card or paid resource was added. `v0.5.0-rc.1` remains unchanged.
+
+## Live verification evidence and limits
+
+- PASS: Docker build/deploy, startup migrations and idempotent synthetic seed, HTTPS redirect, readiness, data preserved across redeploy.
+- PASS: WebGL landing, reduced-motion and unavailable-WebGL fallback; invitation login; reload/logout/login; EN/UA/RU banner and workspace; mobile 390 × 844 smoke.
+- PASS: exact sample upload → analyze (2 valid / 2 invalid / 1 duplicate) → commit two leads; subsequent sample dedupe; dashboard records, mock sink deliveries and `demo.delivery.simulated` audit.
+- PASS: Secure/HttpOnly/SameSite=Lax one-hour session; preauth and session CSRF; same-origin mutation succeeds, foreign origin/wrong token blocked; anonymous/admin/config/test/retry/reset operations blocked; no public API docs, no wildcard CORS; CSP/HSTS/frame-denial/nosniff and API no-store.
+- PASS: modified CSV rejected without echoed input; normal and chunked oversized bodies rejected; shared minute budget produced 429. HTML conditional 304 reload retains the existing same-origin UI CSP.
+- Hosted CI PASS: production startup guards, workspace isolation, 30-import cap, daily request budget and quota persistence. Live quotas were not exhausted for the import/day caps; destructive offline reset and deliberate live DB outage were not performed.
+- No real Telegram/webhook credentials, persistent worker or outbound integration sends were used. Reviewed public responses contain synthetic data; host logs record request metadata without bodies/secrets. Invitation password remains private in Render environment; this document contains no credentials.
+
+Login: open the workspace, use `demo@example.test` and request temporary access from the owner. The owner retrieves `ASTRASYNQ_DEMO_PASSWORD` privately from Render; never publish it. Shared records and recent audit history change between reviewers. The exact sample can have zero new valid rows after earlier commits. Free cold starts, request limits and the 30-import cap constrain availability; owner reset requires the private procedure below. This is a portfolio demonstration, not production readiness evidence or an SLA.
+
+The original preparation below is retained as the operator runbook. Provider configuration was created through `render.demo.yaml`; startup/build commands remain repository-defined. Portfolio and external profile updates require separate approval.
 
 ## Architecture
 
@@ -112,4 +128,4 @@ Cold starts can take roughly a minute plus DB wake/migration checks; the first p
 
 ## Local validation
 
-See final preparation report for exact command results. Local production guard tests plus demo browser on isolated loopback test mode do not validate provider TLS, deployed Docker build, Neon connectivity, account eligibility or hosted checks on a new commit. These remain explicit post-approval deploy checks.
+See final preparation report for exact command results. Local production guard tests plus demo browser on isolated loopback test mode do not validate provider TLS, deployed Docker build, Neon connectivity, account eligibility or hosted checks on a new commit. Provider TLS, Docker startup and Neon connectivity were verified live on the deployed commit above; local tests alone do not establish those results.
