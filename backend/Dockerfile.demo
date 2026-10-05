@@ -9,6 +9,11 @@ RUN pnpm build
 
 FROM python:3.12-slim
 WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+# psycopg[binary] bundles OpenSSL; point its system trust lookup at Debian's CA bundle.
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/app ./app
