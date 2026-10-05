@@ -1,6 +1,8 @@
 # AstraSynq — Data Automation & Integration Platform
 
-**0.5.0-rc.1 · Local Release Candidate.** A portfolio project for validating CSV data and delivering durable automation events. Production deployment and public release are pending.
+**0.5.0-rc.1 · Release Candidate.** A portfolio project for validating CSV data and delivering durable automation events. Not production-ready.
+
+**[Live synthetic demo](https://astrasynq-synthetic-demo.onrender.com)** · Render Free + Neon Free (Frankfurt), verified 2026-10-05. Invitation login; exact five-row sample only; deliveries simulated; no persistent worker or real integrations. Free cold starts can take about a minute, and reviewers share bounded synthetic data. See [live demo setup and verification](docs/LIVE_DEMO.md).
 
 FastAPI · React · TypeScript · PostgreSQL · SQLAlchemy/Alembic · Auth/RBAC · CSV validation and deduplication · outbox/worker/retries · Webhook HMAC · Telegram · timezone schedules · EN/UA/RU · immersive WebGL landing.
 
@@ -84,6 +86,6 @@ This is a locally tested release candidate. Production TLS/proxy configuration, 
 Credentials are supplied privately to worker environment references. Do not commit real environment values, PostgreSQL data, sessions, dumps, logs, cookies, internal QA reports or temporary work directories. Use synthetic samples only. See [security](docs/SECURITY.md), [architecture](docs/architecture.md), [deployment](docs/DEPLOYMENT.md), [public/private split](docs/PUBLIC_RELEASE.md), [dependencies](docs/DEPENDENCIES.md) and [asset provenance](docs/ASSET_PROVENANCE.md).
 
 Original project code and owner-confirmed original assets are licensed under [MIT](LICENSE). Third-party code, fonts and derived environments retain their own licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).
-# Live demo preparation (draft)
+# Live synthetic demo
 
-A synthetic, invitation-only deployment is prepared locally; no live demo URL is published yet. See [Live demo guide](docs/LIVE_DEMO.md) and [hosting research checked 2026-10-05](docs/HOSTING_RESEARCH.md). The demo uses sample-only imports and simulated deliveries; it does not operate a persistent production worker. Deployment and code publication require owner approval.
+The [live synthetic demo](https://astrasynq-synthetic-demo.onrender.com) is deployed on Render Free and Neon Free. See [Live demo guide](docs/LIVE_DEMO.md) and [hosting research checked 2026-10-05](docs/HOSTING_RESEARCH.md). The demo uses sample-only imports and simulated deliveries; it does not operate a persistent production worker. This Release Candidate is not production-ready. External portfolio/profile updates require separate owner approval.
