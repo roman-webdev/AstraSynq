@@ -1,0 +1,13 @@
+external_id,email,name,company,amount,currency,created_at
+lead-001,alex@example.com,Alex Morgan,Acme,1250.00,USD,2026-10-01
+lead-002,jamie@example.com,Jamie Chen,Orbit Studio,850.00,USD,
+lead-003,taylor@example.com,Taylor Reed,Northstar,450.00,USD,
+lead-004,invalid-email,Robin Lane,Studio Nine,300.00,USD,
+lead-005,morgan@example.com,Morgan Ellis,Acme,920.00,USD,
+lead-006, JAMIE@example.com ,Jamie Chen,Orbit Studio,850.00,USD,
+lead-007,sam@example.com,Sam Rivera,Bright Labs,120.00,USD,
+lead-008,lee@example.com,Lee Kim,Northstar,not-a-number,USD,
+lead-009,casey@example.com,Casey Park,Studio Nine,640.00,USD,
+lead-010,avery@example.com,Avery Brooks,Acme,2400.00,USD,
+lead-011,quinn@example.com,Quinn West,Bright Labs,720.00,USD,
+lead-012,drew@example.com,Drew Bell,Orbit Studio,510.00,USD,

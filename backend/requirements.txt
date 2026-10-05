@@ -1,0 +1,10 @@
+fastapi==0.142.2
+uvicorn==0.54.0
+python-multipart==0.0.32
+psycopg[binary]==3.3.4
+SQLAlchemy==2.0.43
+alembic==1.16.5
+python-dotenv==1.2.2
+argon2-cffi==25.1.0
+tzdata==2026.5
+

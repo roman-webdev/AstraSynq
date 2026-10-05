@@ -1,0 +1,1 @@
+export function CoreFallback(){return <picture className="core-fallback" aria-hidden="true" data-testid="core-fallback"><source media="(max-width:767px)" srcSet="/visuals/core-poster-mobile.webp"/><img src="/visuals/core-poster-desktop.webp" alt="" fetchPriority="high" decoding="async"/></picture>;}

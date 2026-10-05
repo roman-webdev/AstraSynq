@@ -1,0 +1,3 @@
+import fs from 'node:fs';
+const file='tests/immersive.e2e.mjs';let s=fs.readFileSync(file,'utf8');s=s.replace("waitFor({timeout:20000});assert.equal(await p.locator('[data-testid=\"core-fallback\"]').count(),0);","waitFor({timeout:20000});await p.locator('[data-testid=\"core-fallback\"]').waitFor({state:'detached'});assert.equal(await p.locator('[data-testid=\"core-fallback\"]').count(),0);");fs.writeFileSync(file,s);
+const f='tests/performance-gate.e2e.mjs';s=fs.readFileSync(f,'utf8').replace("await p.screenshot({path:`${output}/landing.png`});","await p.locator('.core-fallback').waitFor({state:'detached'});await p.screenshot({path:`${output}/landing.png`});");fs.writeFileSync(f,s);

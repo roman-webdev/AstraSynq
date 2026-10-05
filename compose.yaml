@@ -1,0 +1,70 @@
+name: astrasynq
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-astrasynq}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your local .env}
+      POSTGRES_DB: ${POSTGRES_DB:-astrasynq}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  migrate:
+    build: ./backend
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    environment: &app_environment
+      DATABASE_URL: postgresql://${POSTGRES_USER:-astrasynq}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in your local .env}@db:5432/${POSTGRES_DB:-astrasynq}
+      ASTRASYNQ_MODE: ${ASTRASYNQ_MODE:-development}
+      AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-false}
+      AUTH_COOKIE_SAMESITE: ${AUTH_COOKIE_SAMESITE:-lax}
+      AUTH_SESSION_HOURS: ${AUTH_SESSION_HOURS:-12}
+      AUTH_ALLOWED_ORIGINS: ${AUTH_ALLOWED_ORIGINS:-http://127.0.0.1:4173,http://localhost:4173,http://127.0.0.1:8000}
+    depends_on:
+      db:
+        condition: service_healthy
+  api:
+    build: ./backend
+    restart: unless-stopped
+    environment: *app_environment
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  worker:
+    build: ./backend
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
+    environment:
+      <<: *app_environment
+      ASTRASYNQ_ALLOW_PRIVATE_WEBHOOKS: "false"
+      ASTRASYNQ_CREDENTIAL_WEBHOOK: ${ASTRASYNQ_CREDENTIAL_WEBHOOK:-}
+      ASTRASYNQ_CREDENTIAL_TELEGRAM: ${ASTRASYNQ_CREDENTIAL_TELEGRAM:-}
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.worker", "--health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:4173:80"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  postgres_data:

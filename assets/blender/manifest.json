@@ -1,0 +1,31 @@
+{
+  "blender": "5.2.2 LTS",
+  "source": "assets/blender/astra-core.gltf",
+  "license": "Original AstraSynq geometry and Blender-baked procedural textures; no external assets",
+  "coordinates": "XY board, Z up; export_yup=False",
+  "mesh_count": 14,
+  "cycles_samples": 48,
+  "model": "frontend/public/visuals/astra-core.model.bin",
+  "geometry_raw_bytes": 3500492,
+  "geometry_gzip_bytes": 836105,
+  "textures": [
+    {
+      "file": "astra-ceramic_normal.webp",
+      "bytes": 51086
+    },
+    {
+      "file": "astra-ceramic_roughness.webp",
+      "bytes": 2234
+    },
+    {
+      "file": "astra-pcb_normal.webp",
+      "bytes": 45364
+    },
+    {
+      "file": "astra-pcb_roughness.webp",
+      "bytes": 1688
+    }
+  ],
+  "transfer_bytes": 936477,
+  "compression": "gzip via native DecompressionStream; external WebP textures; CSP unchanged"
+}

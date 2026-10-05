@@ -1,0 +1,16 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+import fs from 'node:fs';
+const out=process.env.ASTRASYNQ_IMMERSIVE_OUTPUT||'../.clearance/handoff';fs.mkdirSync(out,{recursive:true});
+test('reload matrix: neutral first paint, real frame, transition, failure and reduced motion',async()=>{
+ const b=await chromium.launch({channel:process.env.PLAYWRIGHT_CHANNEL||'chrome',headless:true});try{
+ for(const width of [1440,1024,768,390])for(const lang of ['en','uk','ru']){
+ const c=await b.newContext({viewport:{width,height:1000}});await c.addInitScript(l=>localStorage.setItem('astrasynq.language',l),lang);await c.route('**/api/v1/auth/me',r=>r.fulfill({status:401,json:{detail:{code:'auth_required'}}}));const p=await c.newPage();let release;let gate=new Promise(r=>release=r);await p.route('**/CoreScene-*.js',async r=>{await gate;await r.continue();});await p.goto(process.env.ASTRASYNQ_IMMERSIVE_URL||'http://127.0.0.1:4194',{waitUntil:'domcontentloaded'});await p.locator('.core-fallback').waitFor();assert.equal(await p.locator('.core-fallback').evaluate(e=>getComputedStyle(e).opacity),'0');assert(await p.locator('h1').isVisible());const heroBounds=await p.locator('h1').boundingBox();const sceneBounds=await p.locator('.core-object').boundingBox();await p.screenshot({path:`${out}/reload-loading-${lang}-${width}.png`});release();await p.locator('.core-visual[data-state="webgl"]').waitFor({timeout:30000});await p.waitForTimeout(250);assert.deepEqual(await p.locator('h1').boundingBox(),heroBounds);assert.deepEqual(await p.locator('.core-object').boundingBox(),sceneBounds);await p.screenshot({path:`${out}/reload-ready-${lang}-${width}.png`});
+ const session=await c.newCDPSession(p);await session.send('Network.enable');for(const cold of [false,true,true]){await session.send('Network.setCacheDisabled',{cacheDisabled:cold});await p.reload();await p.locator('.core-visual[data-state="webgl"]').waitFor({timeout:30000});assert.equal(await p.locator('.bridge-arrival,.bridge-arrival-line').count(),0);}
+ await p.locator('.core-workspace-bridge').evaluate(e=>e.scrollIntoView({block:'start'}));await p.screenshot({path:`${out}/transition-${lang}-${width}.png`});await p.locator('#core-validation').evaluate(e=>e.scrollIntoView({block:'center'}));await p.waitForFunction(()=>Number(document.querySelector('.immersive-shell').dataset.stage)<=2);assert.equal(await p.locator('.bridge-arrival,.bridge-arrival-line').count(),0);
+ await p.emulateMedia({reducedMotion:'reduce'});await p.locator('.core-visual[data-state="fallback"]').waitFor();assert.equal(await p.locator('.core-fallback').evaluate(e=>getComputedStyle(e).opacity),'1');await c.close();
+ }
+ const c=await b.newContext();await c.route('**/visuals/astra-core.model.bin',r=>r.abort());const p=await c.newPage();await p.goto(process.env.ASTRASYNQ_IMMERSIVE_URL||'http://127.0.0.1:4194');await p.locator('.core-visual[data-state="fallback"]').waitFor({timeout:30000});assert.equal(await p.locator('.core-fallback').evaluate(e=>getComputedStyle(e).opacity),'1');await p.waitForFunction(()=>document.querySelector('.core-fallback img').naturalWidth>0);await p.screenshot({path:`out/resource-failure.png`.replace('out/',out+'/')});await c.close();
+ }finally{await b.close();}
+});

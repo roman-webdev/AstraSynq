@@ -1,0 +1,114 @@
+[
+  {
+    "path": "frontend/public/visuals/astra-board-desktop.bin",
+    "bytes": 412019,
+    "sha256": "e2ed5686f7cacd9b31840dd9bf66092b51615ea1cd54a56f17fd1cb5ed21af12",
+    "provenance": "Original procedural geometry or Three.js RoomEnvironment-derived studio buffer",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-board-mobile.bin",
+    "bytes": 157064,
+    "sha256": "f4e685f52f771dbd1fa8bd686aa39023562a766e50ee140d26542619e0f233df",
+    "provenance": "Original procedural geometry or Three.js RoomEnvironment-derived studio buffer",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-ceramic_normal.webp",
+    "bytes": 51086,
+    "sha256": "0b790f6ae443227ac5f227446e0abbe5b1b091d98bb565cc83d6ff08bde40644",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-ceramic_roughness.webp",
+    "bytes": 2234,
+    "sha256": "a60faafa7e0a1a5d18ea341efeb78a004659163268527da17291aed44b1b78d8",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-core.model.bin",
+    "bytes": 836105,
+    "sha256": "f6d0c7e9b860c3bf0a163ce2e350b91f72ea3049eb7025c9cd4e8b3122ed1be8",
+    "provenance": "Original procedural geometry or Three.js RoomEnvironment-derived studio buffer",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-pcb_normal.webp",
+    "bytes": 45364,
+    "sha256": "f8d351da8f654623378a4b8092dadaf9b97377ce3bdd5d600d51df42126226f0",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-pcb_roughness.webp",
+    "bytes": 1688,
+    "sha256": "a13c8c216f19ba0b7643cb99cf25f5488f4ce431503364f54daa9b2b507d07b1",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/astra-studio.bin",
+    "bytes": 113342,
+    "sha256": "ad3d8d24ec5ff7ee884e36872922a7856db799fb61fc9dad68a789c31a2604cc",
+    "provenance": "Original procedural geometry or Three.js RoomEnvironment-derived studio buffer",
+    "license": "Three.js MIT attribution retained"
+  },
+  {
+    "path": "frontend/public/visuals/core-poster-desktop.webp",
+    "bytes": 154478,
+    "sha256": "f89823958bc53baf1f680feb634a82a08c106de1567b29f34693812c30ed1a74",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "frontend/public/visuals/core-poster-mobile.webp",
+    "bytes": 31424,
+    "sha256": "d3167c9901212a83fd4b43df7467d14c97ec252af0579e3d0d90c39f92a0ca91",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/dashboard.png",
+    "bytes": 169975,
+    "sha256": "067988551ecc103a1f04c4295599d71515ab45b47111de99a9b9111097168567",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/deliveries.png",
+    "bytes": 75773,
+    "sha256": "573a094e46e35d4fada8803ffc056da161745caf7fdd118e219473105be38944",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/hero.png",
+    "bytes": 1176628,
+    "sha256": "4c1f4bad69654729f4e683c27cd3fb36dcfaa1ecb30a156508b36200d95450e5",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/import-review.png",
+    "bytes": 173267,
+    "sha256": "211982a61a06c5a92fcac1a1a102da50e54776874a6706c06f2bb472c78afdfe",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/integrations.png",
+    "bytes": 92761,
+    "sha256": "3fe445f6b55e01dff1c5ca1659bd39af02a48561530d71f5fb2f44c37fdfa50c",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  },
+  {
+    "path": "docs/screenshots/mobile-iphone-emulation.png",
+    "bytes": 575595,
+    "sha256": "d8e05be00c90f4e1ad15701b905e5ca230721f7e3dda3fdc70ab0b70c1b96781",
+    "provenance": "Owner-confirmed original procedural scene capture / synthetic application capture",
+    "license": "MIT; owner confirmed 2026-10-05"
+  }
+]
