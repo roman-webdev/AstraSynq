@@ -11,8 +11,16 @@ async function checked(response:Response){
  return response;
 }
 export async function request<T>(path:string,options:RequestInit={}):Promise<T>{
- let response:Response;try{response=await fetch(`/api/v1${path}`,{credentials:'same-origin',...options,headers:{...headers(options.body),...options.headers}});}catch{throw new Error('api_unavailable');}
- await checked(response);return response.status===204?undefined as T:response.json();
+ for(let attempt=0;;attempt++){
+  let response:Response;try{response=await fetch(`/api/v1${path}`,{credentials:'same-origin',...options,headers:{...headers(options.body),...options.headers}});}catch{throw new Error('api_unavailable');}
+  try{await checked(response);}catch(error){
+   // Concurrent demo reads can briefly contend for the shared budget lock.
+   if(import.meta.env.VITE_ASTRASYNQ_DEMO_MODE==='true' && (options.method??'GET').toUpperCase()==='GET' && error instanceof Error && error.message==='demo_busy' && attempt<2){
+    await new Promise(resolve=>setTimeout(resolve,150*(attempt+1)));continue;
+   }
+   throw error;
+  }
+  return response.status===204?undefined as T:response.json();
+ }
 }
 export async function download(path:string,filename:string){const response=await checked(await fetch(`/api/v1${path}`,{credentials:'same-origin',headers:headers()}));const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-
