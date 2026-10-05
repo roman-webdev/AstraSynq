@@ -12,7 +12,7 @@ from .models import Workspace, Import, ImportRow, ValidationIssue, Lead, Integra
 from .persistence import workspace, item_for, activity, serialize, analyze_item, commit_item, row_list
 from .imports import FIELDS, parse_csv, safe_csv
 
-from .config import VERSION, production
+from .config import VERSION, production, demo_mode
 from .request_limit import UploadBodyLimit
 from .observability import log
 from uuid import uuid4
@@ -33,13 +33,35 @@ async def validation_error(request, exc):
 async def security_headers(request, call_next):
     request_id=str(uuid4()); request.state.request_id=request_id; started=time.monotonic()
     try:
+        if demo_mode() and (request.url.path.startswith('/api/') or request.url.path=='/health/ready'):
+            from starlette.concurrency import run_in_threadpool
+            from .database import SessionLocal
+            from .demo import reserve_request
+            import re
+            path=request.url.path
+            allowed = request.method in ('GET','HEAD') or (
+                request.method == 'POST' and (path in ('/api/v1/auth/login','/api/v1/auth/logout','/api/v1/imports') or
+                re.fullmatch(r'/api/v1/imports/[0-9a-f-]{36}/(analyze|commit)',path))) or (
+                request.method == 'PUT' and re.fullmatch(r'/api/v1/imports/[0-9a-f-]{36}/mapping',path))
+            if not allowed:
+                raise HTTPException(403, {'code':'demo_operation_disabled'})
+            def budget():
+                with SessionLocal.begin() as db: reserve_request(db)
+            await run_in_threadpool(budget)
         response=await call_next(request)
+    except HTTPException as exc:
+        response=JSONResponse(status_code=exc.status_code,content={'detail':exc.detail})
     except Exception:
         log('request.failed', request_id=request_id, method=request.method)
         response=JSONResponse(status_code=500, content={'detail':{'code':'api_unavailable'}})
     response.headers['X-Request-ID']=request_id
     response.headers['Content-Security-Policy']="default-src 'none'; frame-ancestors 'none'; base-uri 'none'" if production() or request.url.path not in ('/docs','/redoc') else "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https://fastapi.tiangolo.com; frame-ancestors 'none'"
     response.headers['X-Frame-Options']='DENY'
+    if demo_mode():
+        response.headers['X-AstraSynq-Mode']='synthetic-demo'
+        if production(): response.headers['Strict-Transport-Security']='max-age=31536000'
+        if response.headers.get('content-type','').startswith('text/html'):
+            response.headers['Content-Security-Policy']="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
     if production() and request.url.scheme=='https':
         response.headers['Strict-Transport-Security']='max-age=31536000'
     log('request.completed', request_id=request_id, method=request.method, status=response.status_code, duration_ms=round((time.monotonic()-started)*1000))
@@ -82,6 +104,9 @@ def summary(key=Depends(session),db:Session=Depends(get_db,scope="function")):
 
 @app.get('/api/v1/samples/leads.csv',tags=['samples'])
 def sample():
+    if demo_mode():
+        from .demo import SAMPLE
+        return Response(SAMPLE.read_bytes(),media_type='text/csv',headers={'Content-Disposition':'attachment; filename="synthetic-demo.csv"'})
     return Response((Path(__file__).parents[1]/'samples'/'leads.csv').read_text(),media_type='text/csv',headers={'Content-Disposition':'attachment; filename="astrasynq_sample.csv"'})
 
 @app.post('/api/v1/imports',response_model=s.ImportResult,status_code=201,responses=errors,tags=['imports'])
@@ -93,10 +118,18 @@ async def upload(file:UploadFile=File(...),key=Depends(writer),db:Session=Depend
     finally:
         await file.close()
     if len(content)>5*1024*1024: raise HTTPException(413,{'code':'file_limit'})
+    if demo_mode():
+        from .demo import accept_sample
+        accept_sample(content)
     columns,raw=parse_csv(content)
     fields={field:next((c for c in columns if c.lower().strip()==field),'') for field in FIELDS}
     workspace(db,key)
+    if demo_mode():
+        from .demo import MAX_IMPORTS
+        if db.scalar(select(func.count()).select_from(Import).where(Import.workspace_id==key)) >= MAX_IMPORTS:
+            raise HTTPException(429,{'code':'demo_import_limit'})
     item=Import(workspace_id=key,filename=Path(file.filename).name[:120],columns=columns,mapping={k:v for k,v in fields.items() if v},total=len(raw))
+    if demo_mode(): item.filename='synthetic-demo.csv'
     db.add(item);db.flush()
     db.add_all([ImportRow(import_id=item.id,row_number=n,raw=r) for n,r in enumerate(raw,2)])
     db.flush()
@@ -138,7 +171,11 @@ def analyze(import_id:str,request:Request,key=Depends(writer),db:Session=Depends
 
 @app.post('/api/v1/imports/{import_id}/commit',response_model=s.CommitResult,responses=errors,tags=['imports'])
 def commit(import_id:str,request:Request,key=Depends(writer),db:Session=Depends(get_db,scope="function")):
-    workspace(db,key);item=item_for(db,key,import_id,True);result=commit_item(db,item);audit(db,request.state.auth.user_id,key,'import.committed','import',item.id);return result
+    workspace(db,key);item=item_for(db,key,import_id,True);result=commit_item(db,item)
+    if demo_mode():
+        from .demo import complete_mock
+        complete_mock(db,key)
+    audit(db,request.state.auth.user_id,key,'import.committed','import',item.id);return result
 
 @app.get('/api/v1/imports/{import_id}/issues.csv',tags=['imports'])
 def issues(import_id:str,request:Request,key=Depends(session),db:Session=Depends(get_db,scope="function")):
@@ -177,6 +214,14 @@ def list_leads(page:int=Query(1,ge=1),page_size:int=Query(20,ge=1,le=100),search
 
 from .integrations import router as integration_router
 app.include_router(integration_router)
+
+# Same-origin serving is demo-only. Normal API/frontend/worker topology is unchanged.
+if demo_mode():
+    import os
+    from starlette.staticfiles import StaticFiles
+    static_dir=os.getenv('ASTRASYNQ_DEMO_STATIC_DIR','')
+    if static_dir:
+        app.mount('/',StaticFiles(directory=static_dir,html=True),name='synthetic-demo-ui')
 
 
 

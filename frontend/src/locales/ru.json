@@ -442,5 +442,19 @@
   "core.bridge.access": "Войдите в локальную учётную запись, чтобы продолжить.",
   "core.bridge.previewLabel": "От обработки к ясности",
   "core.bridge.previewNote": "Синтетическое превью. Откройте рабочее пространство для своих данных.",
-  "Loading chart…": "Загружаем график…"
+  "Loading chart…": "Загружаем график…",
+  "Synthetic demo data · sample CSV only · deliveries simulated · login by invitation": "Синтетические демоданные · только образец CSV · имитация доставок · вход по приглашению",
+  "Synthetic demo data. Invitation login required.": "Синтетические демоданные. Вход по приглашению.",
+  "Mock deliveries finish during commit. No external integrations or persistent worker.": "Имитация доставок при сохранении. Без внешних интеграций и постоянного worker.",
+  "Mock sink only. Telegram and external webhooks are disabled.": "Только имитация. Telegram и внешние webhooks отключены.",
+  "Mock deliveries finish during commit. No persistent worker.": "Имитация доставок при сохранении. Без постоянного worker.",
+  "Synthetic audit trail": "Журнал синтетических событий",
+  "No persistent worker or timed schedules in this demo. Mock deliveries finish during commit.": "В демо нет постоянного worker или заданий по расписанию. Доставки имитируются при сохранении.",
+  "demo_sample_only": "Демо принимает только скачанный образец CSV.",
+  "demo_import_limit": "Лимит демоимпортов достигнут. Требуется сброс владельцем.",
+  "demo_rate_limited": "Лимит демозапросов достигнут. Попробуйте позже.",
+  "demo_busy": "Демо занято. Попробуйте ещё раз.",
+  "demo_operation_disabled": "Это действие отключено в синтетическом демо.",
+  "synthetic_sink": "Имитация доставки — без сетевого запроса",
+  "Invitation-only synthetic account. Ask the demo owner for temporary access. The first load can take about one minute.": "Синтетическая учётная запись по приглашению. Попросите владельца о временном доступе. Первая загрузка может занять около минуты."
 }

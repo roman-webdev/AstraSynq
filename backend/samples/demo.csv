@@ -1,0 +1,6 @@
+external_id,email,name,company,amount,currency,created_at
+synthetic-001,synthetic01@example.test,Synthetic Lead 01,Synthetic Company A,1250.00,USD,2026-10-01
+synthetic-002,synthetic02@example.test,Synthetic Lead 02,Synthetic Company B,850.00,USD,
+synthetic-003,invalid-email,Synthetic Invalid,Synthetic Company A,300.00,USD,
+synthetic-004,synthetic02@example.test,Synthetic Duplicate,Synthetic Company B,850.00,USD,
+synthetic-005,synthetic05@example.test,Synthetic Amount Error,Synthetic Company C,invalid,USD,

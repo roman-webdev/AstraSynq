@@ -3,10 +3,14 @@ from starlette.responses import JSONResponse
 
 class UploadBodyLimit:
     def __init__(self, app, limit=6 * 1024 * 1024):
+        from .config import demo_mode
+        self.demo=demo_mode()
+        if self.demo: limit=16*1024
         self.app, self.limit = app, limit
 
     async def __call__(self, scope, receive, send):
-        if scope['type'] != 'http' or scope['method'] != 'POST' or scope['path'] != '/api/v1/imports':
+        bounded = scope['method'] in ('POST','PUT','PATCH') if scope['type']=='http' and self.demo else scope.get('method')=='POST' and scope.get('path')=='/api/v1/imports'
+        if scope['type'] != 'http' or not bounded:
             return await self.app(scope, receive, send)
         response = JSONResponse({'detail': {'code': 'file_limit'}}, status_code=413)
         headers = dict(scope.get('headers', []))

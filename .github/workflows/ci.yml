@@ -61,6 +61,10 @@ jobs:
           node node_modules/playwright/cli.js install --with-deps chromium
       - name: Application regression and portable landing smoke
         run: .venv/bin/python scripts/ci-browser.py
+      - name: Synthetic demo build and browser boundaries
+        run: |
+          VITE_ASTRASYNQ_DEMO_MODE=true pnpm --dir frontend build
+          .venv/bin/python scripts/verify-demo.py
       - name: Release and public file checks
         run: |
           .venv/bin/python scripts/test-release-static.py

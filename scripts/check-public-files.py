@@ -4,7 +4,8 @@ import re
 ROOT=Path(__file__).resolve().parents[1]
 PUBLIC_DOCS={'api-contracts.md','architecture.md','auth-schema.sql','authentication.md','automation-schema.sql','automation.md','DEPLOYMENT.md','SECURITY.md','RELEASE_CHECKLIST.md','openapi.json','PORTFOLIO.md','PUBLIC_RELEASE.md','ASSET_PROVENANCE.md','DEPENDENCIES.md','CI.md','verification.md'}
 PRIVATE_PARTS={'.git','.venv','.local','.pnpm-store','node_modules','dist','work','previews','__pycache__','.pytest_cache','test-results','playwright-report','coverage','.clearance'}
-ROOT_FILES={'.env.example','.gitignore','README.md','CHANGELOG.md','compose.yaml','LICENSE','THIRD_PARTY_NOTICES.md','PUBLIC_FILE_MANIFEST.json'}
+PUBLIC_DOCS.update({'LIVE_DEMO.md','HOSTING_RESEARCH.md'})
+ROOT_FILES={'.env.example','.gitignore','.dockerignore','render.demo.yaml','README.md','CHANGELOG.md','compose.yaml','LICENSE','THIRD_PARTY_NOTICES.md','PUBLIC_FILE_MANIFEST.json'}
 BLENDER_FILES={'README.md','build_core.py','pack_model.py','board-layout.json','manifest.json'}
 VISUAL_FILES={'astra-board-desktop.bin','astra-board-mobile.bin','astra-ceramic_normal.webp','astra-ceramic_roughness.webp','astra-core.model.bin','astra-pcb_normal.webp','astra-pcb_roughness.webp','astra-studio.bin','core-poster-desktop.webp','core-poster-mobile.webp'}
 DENIED_SUFFIXES={'.log','.db','.sqlite','.sqlite3','.dump','.backup','.bak','.blend1','.har','.webm','.mp4','.pem','.key','.p12','.zip','.7z','.pyc','.pyo'}

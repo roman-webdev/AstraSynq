@@ -9,6 +9,8 @@ from .models import Workspace, User, Membership
 from .auth import CreateUser, hasher, audit
 
 def main():
+    from .config import demo_mode
+    if demo_mode(): raise SystemExit('Synthetic demo forbids admin bootstrap; use app.demo.')
     email=os.getenv('ASTRASYNQ_ADMIN_EMAIL') or input('Admin email: ').strip()
     password=os.getenv('ASTRASYNQ_ADMIN_PASSWORD') or getpass.getpass('Admin password (12+ characters): ')
     try: body=CreateUser(email=email,password=password,role='admin')

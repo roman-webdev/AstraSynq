@@ -1,0 +1,14 @@
+.git
+.env*
+.local
+.venv
+.clearance
+**/node_modules
+**/dist
+**/__pycache__
+**/.pytest_cache
+**/work
+docs
+assets
+outputs
+*.log

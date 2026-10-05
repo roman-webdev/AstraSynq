@@ -96,6 +96,8 @@ def tick():
 
 
 def main():
+    from .config import demo_mode
+    if demo_mode(): raise SystemExit('Synthetic demo has no persistent worker; commits use an internal mock sink.')
     parser=argparse.ArgumentParser();parser.add_argument('--once',action='store_true');parser.add_argument('--health',action='store_true');args=parser.parse_args()
     if args.health:
         raise SystemExit(0 if live() else 1)

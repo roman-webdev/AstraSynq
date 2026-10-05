@@ -57,6 +57,8 @@ docs/*
 !docs/DEPENDENCIES.md
 !docs/CI.md
 !docs/verification.md
+!docs/LIVE_DEMO.md
+!docs/HOSTING_RESEARCH.md
 !docs/screenshots/
 !docs/third-party/
 # Unverified legacy images remain local.

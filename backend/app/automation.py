@@ -53,6 +53,8 @@ class PinnedHTTPS(http.client.HTTPSConnection):
 
 
 def post(url,body,headers,timeout):
+    from .config import demo_mode
+    if demo_mode(): raise ValueError('demo_egress_disabled')
     parsed,ip,port=resolve_url(url)
     conn=PinnedHTTPS(parsed.hostname,ip,port,timeout) if parsed.scheme=='https' else http.client.HTTPConnection(ip,port,timeout=timeout)
     try:
@@ -69,6 +71,8 @@ def signature(secret,stamp,event_id,body):
 
 
 def send(cfg,event):
+    from .config import demo_mode
+    if demo_mode(): return None,'demo_egress_disabled'
     validate_ref(cfg.credential_ref)
     secret=os.getenv(cfg.credential_ref,'')
     if not secret: return None,'credential_missing'
@@ -99,6 +103,8 @@ def next_daily(now,tz):
 
 
 def schedule_due(db,now=None):
+    from .config import demo_mode
+    if demo_mode(): return
     now=now or utcnow()
     for s in db.scalars(select(Schedule).where(Schedule.enabled.is_(True),Schedule.next_run_at<=now).with_for_update(skip_locked=True)):
         due=s.next_run_at

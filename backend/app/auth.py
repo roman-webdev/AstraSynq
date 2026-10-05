@@ -63,6 +63,11 @@ def principal(request:Request,token=Depends(cookie_scheme),csrf=Depends(csrf_sch
         if not row: fail(401,'authentication_required')
         sess,member,user=row
         p=Principal(user.id,member.id,member.workspace_id,sess.id,user.email,member.role,csrf_for(token))
+    from .config import demo_mode
+    if demo_mode():
+        from .demo import require_scope, EMAIL
+        require_scope(p.workspace_id)
+        if p.email != EMAIL or p.role != 'operator': fail(403,'demo_scope_required')
     if request.method not in ('GET','HEAD','OPTIONS'):
         check_origin(request)
         if not csrf or not hmac.compare_digest(csrf,p.csrf_token): fail(403,'csrf_rejected')
@@ -160,6 +165,11 @@ def login(body:Login,request:Request,response:Response,csrf=Depends(csrf_scheme)
         audit(db,user.id if user else None,member.workspace_id if member else None,'login.failure','auth')
         db.commit()  # Failure events must survive the HTTP exception rollback.
         fail(401,'invalid_credentials')
+    from .config import demo_mode
+    if demo_mode():
+        from .demo import require_scope, EMAIL
+        require_scope(member.workspace_id)
+        if user.email != EMAIL or member.role != 'operator': fail(403,'demo_scope_required')
     if hasher.check_needs_rehash(user.password_hash): user.password_hash=hasher.hash(body.password.get_secret_value())
     old=request.cookies.get(COOKIE)
     if old:
